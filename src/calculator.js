@@ -6,6 +6,9 @@
  * - subtraction
  * - multiplication
  * - division
+ * - modulo
+ * - power
+ * - square root
  */
 
 function addition(a, b) {
@@ -28,6 +31,26 @@ function division(a, b) {
   return a / b;
 }
 
+function modulo(a, b) {
+  if (b === 0) {
+    throw new Error('Modulo by zero is not allowed.');
+  }
+
+  return a % b;
+}
+
+function power(base, exponent) {
+  return base ** exponent;
+}
+
+function squareRoot(n) {
+  if (n < 0) {
+    throw new Error('Square root of a negative number is not allowed.');
+  }
+
+  return Math.sqrt(n);
+}
+
 function parseNumber(value) {
   const parsed = Number(value);
 
@@ -48,6 +71,12 @@ function calculate(operation, a, b) {
     '*': multiplication,
     divide: division,
     '/': division,
+    modulo,
+    '%': modulo,
+    power,
+    '^': power,
+    sqrt: squareRoot,
+    squareroot: squareRoot,
   };
 
   const handler = operations[operation];
@@ -60,12 +89,31 @@ function calculate(operation, a, b) {
 }
 
 function runCLI(args) {
-  if (args.length !== 3) {
-    throw new Error('Usage: node src/calculator.js <add|subtract|multiply|divide> <number1> <number2>');
+  if (args.length !== 2 && args.length !== 3) {
+    throw new Error(
+      'Usage: node src/calculator.js <add|subtract|multiply|divide|modulo|power|sqrt> <number1> [number2]',
+    );
   }
 
   const operation = args[0];
   const a = parseNumber(args[1]);
+
+  if (operation === 'sqrt' || operation === 'squareroot') {
+    if (args.length !== 2) {
+      throw new Error(
+        'Usage: node src/calculator.js <add|subtract|multiply|divide|modulo|power|sqrt> <number1> [number2]',
+      );
+    }
+
+    return calculate(operation, a);
+  }
+
+  if (args.length !== 3) {
+    throw new Error(
+      'Usage: node src/calculator.js <add|subtract|multiply|divide|modulo|power|sqrt> <number1> [number2]',
+    );
+  }
+
   const b = parseNumber(args[2]);
 
   return calculate(operation, a, b);
@@ -86,6 +134,9 @@ module.exports = {
   subtraction,
   multiplication,
   division,
+  modulo,
+  power,
+  squareRoot,
   calculate,
   runCLI,
 };
